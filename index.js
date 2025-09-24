@@ -1,33 +1,40 @@
+const prompt = require("prompt-sync")()
 const Paciente = require("./class/Paciente")
-const FilaHospital = require("./class/FilaHospital")
 const Medico = require("./class/Medico")
 const Enfermeiro = require("./class/Enfermeiro")
+const FilaHospital = require("./class/FilaHospital")
 
 const fila = new FilaHospital()
 
-const paciente1 = new Paciente("João", 45, true)
-const paciente2 = new Paciente("Maria", 30)
-const paciente3 = new Paciente("Carlos", 70, true)
+console.log("=== Sistema de Fila Hospitalar ===")
 
-fila.adicionarPaciente(paciente1)
-fila.adicionarPaciente(paciente2)
-fila.adicionarPaciente(paciente3)
+const qtd = parseInt(prompt("Quantos pacientes deseja cadastrar? "))
 
-console.log("📋 Fila de Espera:")
+for (let i = 0; i < qtd; i++) {
+    console.log(`\nCadastro do paciente ${i + 1}:`)
+
+    const nome = prompt("Nome do paciente: ")
+    const idade = parseInt(prompt("Idade: "))
+    const prioridade = prompt("Prioridade (s/n): ").toLowerCase() === "s"
+
+    const paciente = new Paciente(nome, idade, prioridade)
+    fila.adicionarPaciente(paciente)
+}
+
+console.log("\n📋 Fila de Espera:")
 console.log(fila.mostrarFila())
-console.log("\n")
 
-const medico = new Medico("Felipe")
-const enfermeiro = new Enfermeiro("Ana")
+const nomeMedico = prompt("\nNome do médico: ")
+const medico = new Medico(nomeMedico)
+const nomeEnfermeiro = prompt("Nome do enfermeiro: ")
+const enfermeiro = new Enfermeiro(nomeEnfermeiro)
 
-let pacienteAtendido = fila.proximoPaciente()
-console.log(enfermeiro.realizarAtendimento(pacienteAtendido))
-console.log(medico.realizarAtendimento(pacienteAtendido))
+console.log("\n--- Atendimentos ---")
 
-pacienteAtendido = fila.proximoPaciente()
-console.log(enfermeiro.realizarAtendimento(pacienteAtendido))
-console.log(medico.realizarAtendimento(pacienteAtendido))
+while (fila.fila.length > 0) {
+    const paciente = fila.proximoPaciente()
+    console.log(enfermeiro.realizarAtendimento(paciente))
+    console.log(medico.realizarAtendimento(paciente))
+}
 
-
-console.log("\n")
-console.log(FilaHospital.mostrarTotalPacientes())
+console.log("\n" + FilaHospital.mostrarTotalPacientes())
